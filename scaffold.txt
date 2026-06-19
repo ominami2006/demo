@@ -1,0 +1,31 @@
+ИМПОРТ ДАННЫХ:
+
+Для корректного импорта данных в SQL Server (например, через мастер Import Flat File в SSMS) при сохранении из Excel нужно выбирать следующий формат:
+
+CSV UTF-8 (разделители - запятые) (*.csv)
+
+МОДЕЛИ БД:
+
+Install-Package Microsoft.EntityFrameworkCore.SqlServer -Version 8.0.21
+
+Install-Package Microsoft.EntityFrameworkCore.Tools -Version 8.0.21
+
+Install-Package Microsoft.EntityFrameworkCore.Design -Version 8.0.21
+
+1. Через Консоль диспетчера пакетов (Package Manager Console) в Visual Studio
+
+Scaffold-DbContext "Server=demoSRV1;Database=user13;User Id=user13;Password=41225;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+
+2. Через терминал командной строки (.NET CLI)
+
+dotnet ef dbcontext scaffold "Server=localhost\SQLEXPRESS;Database=DEMO;Trusted_Connection=True;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -o Models
+
+Полезные параметры (флаги), которые могут пригодиться:
+
+-OutputDir Models (или -o Models в CLI): Указывает целевую папку. Если папки Models нет, она будет создана автоматически.
+
+-Force (или -f в CLI): Обязательно добавьте этот флаг в самый конец команды, если вы изменили что-то в базе данных и хотите пересоздать классы. Без него EF откажется перезаписывать существующие файлы.
+
+-Context "AppDbContext" (или -c "AppDbContext"): Если вам нужно задать конкретное имя для генерируемого файла контекста (по умолчанию он берет имя из названия базы данных).
+
+-Tables Order, Product (или -t Order -t Product): Позволяет сгенерировать модели не для всей базы, а только для конкретных таблиц.
